@@ -9,10 +9,10 @@ module irq_gen #(
     // config
     input [1:0] irq_mode_i ,
     input [15:0] length_i ,
+    input [STATUS_W - 1:0] mask_i ,
     // wraccess
     input clear_irq_i ,
     // status vector must be pulse signal
-    input [STATUS_W - 1:0] mask_i ,
     input [STATUS_W - 1:0] status_i ,
     // generated irq
     output logic irq_o
