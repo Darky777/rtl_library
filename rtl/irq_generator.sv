@@ -27,7 +27,7 @@ module irq_gen #(
     always_ff @( posedge clk_i ) begin : proc_external_done_irq
         if ( srst_i ) begin
             counter_irq <= '0;
-            external_done_irq_o <= INIT_VALUE;
+            irq_o <= INIT_VALUE;
         end if( clear_irq_i ) begin
             case ( irq_mode )
                 FIXED_N : irq_o  <= 1'b1;
