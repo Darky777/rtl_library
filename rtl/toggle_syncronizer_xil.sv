@@ -8,7 +8,7 @@ module toggle_syncronizer_xil (
 
     logic ff_a;
     (* ASYNC_REG="true" *) logic ff_b0 ;
-    ff_b1,ff_b2;
+    logic ff_b1,ff_b2;
 
     /*------------------------------------------------------------------------------
     --  clka clock domain
