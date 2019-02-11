@@ -1,7 +1,9 @@
 module toggle_synchronizer_xil (
     input clka_i , // clk source
     input data_i , // must be pulse
-    input srst_i ,
+    input srst_a_i ,
+
+    input srst_b_i ,
     input clkb_i , // clk destonation
     output data_o  // pulse synchron with clk destonation
 );
@@ -14,7 +16,7 @@ module toggle_synchronizer_xil (
     --  clka clock domain
     ------------------------------------------------------------------------------*/
     always_ff @( posedge clka_i ) begin
-        if ( srst_i ) begin
+        if ( srst_a_i ) begin
             ff_a <= 1'b0 ;
         end else begin
             ff_a <= ( data_i ) ? ( !ff_a ) : ( ff_a ) ;
@@ -25,7 +27,7 @@ module toggle_synchronizer_xil (
     --  clkb clock domain
     ------------------------------------------------------------------------------*/
     always_ff @( posedge clkb_i ) begin
-        if ( srst_i ) begin
+        if ( srst_b_i ) begin
             ff_b0 <= 1'b0 ;
             ff_b1 <= 1'b0 ;
             ff_b2 <= 1'b0 ;
