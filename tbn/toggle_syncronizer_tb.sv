@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-module toggle_syncronizer_tb;
+module toggle_synchronizer_tb;
     parameter real FREQA  = 500.0 ; // MHZ
     parameter real FREQB  = 50.0 ; // MHZ
 
@@ -23,7 +23,7 @@ module toggle_syncronizer_tb;
 --  DUT
 ------------------------------------------------------------------------------*/
 
-toggle_syncronizer_alt i_toggle_syncronizer (.clka_i(clka_i), .arst_n_i(arst_n_i),.data_i(data_i), .clkb_i(clkb_i), .data_o(data_o));
+toggle_synchronizer_alt i_toggle_syncronizer (.clka_i(clka_i), .arst_n_i(arst_n_i),.data_i(data_i), .clkb_i(clkb_i), .data_o(data_o));
 
 
 /*------------------------------------------------------------------------------

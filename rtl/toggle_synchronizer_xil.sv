@@ -1,4 +1,4 @@
-module toggle_syncronizer_xil (
+module toggle_synchronizer_xil (
     input clka_i , // clk source
     input data_i , // must be pulse
     input srst_i ,

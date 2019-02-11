@@ -1,4 +1,4 @@
-module toggle_syncronizer_alt (
+module toggle_synchronizer_alt (
     input clka_i , // clk source
     input data_i , // must be pulse
     input arst_n_i ,
