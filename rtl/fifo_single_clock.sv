@@ -32,6 +32,7 @@ module fifo_single_clock import common_pkg::*; #(
     logic [clogb2_f(DEPTH) - 1: 0] count ;
     logic empty,full,overflow,underflow ;
     logic [DW-1:0] mem [DEPTH];
+    logic valid ;
 
     /*------------------------------------------------------------------------------
     --  Functional
@@ -63,9 +64,9 @@ module fifo_single_clock import common_pkg::*; #(
     generate
         if( SHOW_AHEAD == "ON") begin
             assign data_o = mem[addr_rd];
-            assign full = addr_rd == ( addr_wr + 1'b1 );
-
+            assign valid  = req_i && !empty ;
         end else if ( SHOW_AHEAD == "OFF" ) begin
+
             always_ff @( posedge clk_i ) begin
                 if ( srst_i ) begin
                     data_o <= '0;
@@ -73,8 +74,19 @@ module fifo_single_clock import common_pkg::*; #(
                     data_o <= mem[addr_rd];
                 end
             end
+
+            always_ff @( posedge clk_i ) begin : proc_
+                if( srst_i ) begin
+                   valid <= 1'b0;
+                end else begin
+                   valid <= req_i && !empty ;
+                end
+            end
+
         end
     endgenerate
+
+    assign full = addr_rd == ( addr_wr + 1'b1 );
 
     // -- overflow functional ---------------------------
     always_ff @( posedge clk_i ) begin
@@ -98,12 +110,15 @@ module fifo_single_clock import common_pkg::*; #(
         end
     end
 
+    assign count = addr_wr - addr_rd ;
     /*------------------------------------------------------------------------------
     --  Output status
     ------------------------------------------------------------------------------*/
     assign empty_o = empty ;
     assign overflow_o = overflow ;
-    assign count_o = addr_wr - addr_rd ;
-    assign underflow = underflow_o ;
+    assign count_o = count ;
+    assign underflow_o = underflow ;
+    assign full_o = full ;
+    assign valid_o = valid ;
 
 endmodule

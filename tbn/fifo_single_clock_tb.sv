@@ -64,6 +64,9 @@ module fifo_single_clock_tb;
         srst_i = 0;
         cycles(5,clk_i,CYCLE);
 
+        /*------------------------------------------------------------------------------
+        --  testing overflow
+        ------------------------------------------------------------------------------*/
         repeat ( 30 ) begin
             valid_i = 1;
             cycles(1,clk_i,CYCLE);
@@ -82,6 +85,27 @@ module fifo_single_clock_tb;
         end
 
         cycles(100,clk_i,CYCLE);
+
+        /*------------------------------------------------------------------------------
+        --  Testing underflow
+        ------------------------------------------------------------------------------*/
+        valid_i = 0;
+        srst_i = 1;
+        cycles(5,clk_i,CYCLE);
+        srst_i = 0;
+        cycles(5,clk_i,CYCLE);
+
+        repeat ( 30 ) begin
+            valid_i = 1;
+            cycles(1,clk_i,CYCLE);
+        end
+        valid_i = 0;
+
+        repeat ( 40 ) begin
+            req_i = 1 ;
+            cycles(1,clk_i,CYCLE);
+        end
+        req_i = 0;
 
         $stop ;
     end
