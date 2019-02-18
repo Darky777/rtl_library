@@ -53,8 +53,6 @@ module fifo_single_clock import common_pkg::*; #(
         end
     end
 
-    assign empty = ( addr_wr - addr_rd ) == '0 ;
-
     always_ff @(posedge clk_i) begin : proc_mem
         if( valid_i ) begin
             mem[addr_wr] <= data_i ;
@@ -79,14 +77,45 @@ module fifo_single_clock import common_pkg::*; #(
                 if( srst_i ) begin
                    valid <= 1'b0;
                 end else begin
-                   valid <= req_i && !empty ;
+                   valid <= req_i && !empty && !underflow && !overflow;
                 end
             end
 
         end
     endgenerate
 
-    assign full = addr_rd == ( addr_wr + 1'b1 );
+    always_ff @( posedge clk_i ) begin : proc_full
+        if( srst_i ) begin
+            full <= 0;
+        end else begin
+            if( full ) begin
+                if ( req_i ) begin
+                    full <= ( valid_i ) ? ( 1'b1 ) : ( 1'b0 ) ;
+                end
+            end else begin
+                if ( valid_i ) begin
+                    full <= ( req_i ) ? ( 1'b0 ) : ( addr_rd == ( addr_wr + 2'd2 ) ) ;
+                end
+            end
+        end
+    end
+
+    always_ff @( posedge clk_i ) begin : proc_empty
+        if ( srst_i ) begin
+            empty <= 0;
+        end else begin
+            // all cases
+            unique if ( !valid_i && !req_i ) begin
+                empty <= ( addr_wr - addr_rd ) == '0 ;
+            end else if ( valid_i && !req_i ) begin
+                empty <= 1'b0 ;
+            end else if ( !valid_i && req_i ) begin
+                empty <= ( addr_wr - ( addr_rd + 1'b1 ) ) == '0 ;
+            end else if ( valid_i && req_i ) begin
+                empty <= ( addr_wr - addr_rd ) == '0 ;
+            end
+        end
+    end
 
     // -- overflow functional ---------------------------
     always_ff @( posedge clk_i ) begin
@@ -110,7 +139,22 @@ module fifo_single_clock import common_pkg::*; #(
         end
     end
 
-    assign count = addr_wr - addr_rd ;
+    // -- counter functional ---------------------------
+    always_ff @( posedge clk_i ) begin : proc_count
+        if ( srst_i ) begin
+            count <= '0;
+        end else begin
+            unique if ( !valid_i && !req_i ) begin
+                count <= addr_wr - addr_rd ;
+            end else if ( valid_i && !req_i ) begin
+                count <= addr_wr - addr_rd + 1'b1 ;
+            end else if ( !valid_i && req_i ) begin
+                count <= addr_wr - addr_rd - 1'b1 ;
+            end else if ( valid_i && req_i ) begin
+                count <= addr_wr - addr_rd  ;
+            end
+        end
+    end
     /*------------------------------------------------------------------------------
     --  Output status
     ------------------------------------------------------------------------------*/
