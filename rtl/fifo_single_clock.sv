@@ -2,7 +2,7 @@
 module fifo_single_clock import common_pkg::*; #(
     parameter DEPTH = 32,
     parameter DW   = 32 ,
-    parameter string SHOW_AHEAD = "OFF"  // "OFF" "ON"
+    parameter SHOW_AHEAD = "OFF"  // "OFF" "ON"
 
 ) (
     input clk_i   ,
