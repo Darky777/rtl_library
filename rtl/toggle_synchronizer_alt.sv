@@ -35,6 +35,6 @@ module toggle_synchronizer_alt (
         end
     end
 
-    assign data_o = ff_b1 ^^ ff_b2 ;
+    assign data_o = ff_b1 ^ ff_b2 ;
 
 endmodule
