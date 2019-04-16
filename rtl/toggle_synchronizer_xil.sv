@@ -38,6 +38,6 @@ module toggle_synchronizer_xil (
         end
     end
 
-    assign data_o = ff_b1 ^^ ff_b2 ;
+    assign data_o = ff_b1 ^ ff_b2 ;
 
 endmodule
