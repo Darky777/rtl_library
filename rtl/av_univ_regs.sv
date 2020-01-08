@@ -79,8 +79,6 @@ module av_univ_regs #(
         for (int ind_bytes = 0; ind_bytes < BYTES_IN_WORD; ind_bytes++) begin
             if(avms_byteenable[ind_bytes]) begin
                 avms_readdata[ind_bytes*8+:8] <= slv_word_i[avms_address][ind_bytes*8 +: 8];
-            end else begin
-                avms_readdata[ind_bytes*8+:8] <= '0;
             end
         end
     end
